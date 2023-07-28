@@ -24,7 +24,6 @@ public class TimeServlet extends HttpServlet {
         ZoneId zoneId = ZoneId.of("UTC");
 
         if (timezoneParam != null && !timezoneParam.isEmpty()) {
-            timezoneParam = URLEncoder.encode(timezoneParam, StandardCharsets.UTF_8.toString());
             try {
                 zoneId = ZoneId.of(timezoneParam);
             } catch (Exception e) {
@@ -40,7 +39,6 @@ public class TimeServlet extends HttpServlet {
         response.getWriter().write("<html><body><h1>Current Time</h1><p>" + formattedTime + "</p>");
     }
 }
-
 
 //надо написть регион/город например: time?timezone=America/Denver , time?timezone=Europe/Kiev
 /*@Override
