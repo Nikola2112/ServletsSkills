@@ -21,7 +21,7 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.templateresolver.FileTemplateResolver;
 
 @WebServlet("/time")
-public class TimeServlet2 extends HttpServlet {
+public class TimeServlet extends HttpServlet {
 
     private TemplateEngine engine;
 
@@ -41,12 +41,13 @@ public class TimeServlet2 extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        final SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
-        f.setTimeZone(TimeZone.getTimeZone("UTC"));
-        String format = f.format(new Date());
+        final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String format = simpleDateFormat.format(new Date());
+
         if (req.getParameter("timezone") != null) {
             int timezone = Integer.parseInt(req.getParameter("timezone").replace("UTC", "").trim());
-            format = changeTime(f, timezone);
+            format = changeTime(simpleDateFormat, timezone);
             format = format.replace("UTC", req.getParameter("timezone"));
         }
         resp.setContentType("text/html; charset=utf-8");
@@ -60,7 +61,7 @@ public class TimeServlet2 extends HttpServlet {
                     String[] splitPairs = pair.split("=");
                     if (splitPairs[0].trim().equals("lastTimezone")) {
                         int time = Integer.parseInt(splitPairs[1].replaceAll("[UTC+-]", ""));
-                        format = changeTime(f, time);
+                        format = changeTime(simpleDateFormat, time);
                         format = format.replace("UTC", splitPairs[1]);
                         break;
                     }
@@ -79,7 +80,7 @@ public class TimeServlet2 extends HttpServlet {
                 req.getLocale(),
                 Map.of("queryParams", Map.of("time", format))
         );
-        engine.process("index", context, resp.getWriter());
+        engine.process("test", context, resp.getWriter());
         resp.getWriter().close();
     }
 
